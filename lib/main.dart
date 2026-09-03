@@ -1,9 +1,11 @@
+import 'package:blog_app/core/theme.dart';
 import 'package:blog_app/features/auth/presentation/pages/signup_page.dart';
 import 'package:flutter/material.dart';
 
 void main() {
   runApp(const BlogApp());
 }
+
 class BlogApp extends StatelessWidget {
   const BlogApp({super.key});
 
@@ -11,10 +13,8 @@ class BlogApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
+      theme: AppTheme.darkModeTheme,
       home: const SignupPage(),
-
-      
-      
     );
   }
 }
