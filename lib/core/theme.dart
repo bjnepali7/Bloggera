@@ -8,6 +8,9 @@ class AppTheme {
   );
 
   static final darkModeTheme = ThemeData.dark().copyWith(
+    appBarTheme: const AppBarTheme(
+      backgroundColor: AppPallete.backgroundColor,
+    ),
     scaffoldBackgroundColor: AppPallete.backgroundColor,
     inputDecorationTheme: InputDecorationTheme(
       contentPadding: EdgeInsets.all(24),
