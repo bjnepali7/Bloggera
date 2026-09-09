@@ -8,11 +8,12 @@ class UserSignUp implements Usecase<String, UserSignUpParams> {
   const UserSignUp(this.authRepository);
   @override
   Future<Either<Failures, String>> call(UserSignUpParams params) async {
-   return await authRepository.signUpWithEmailPassword(
+    final res = await authRepository.signUpWithEmailPassword(
       name: params.name,
       email: params.email,
       password: params.password,
     );
+    return res;
   }
 }
 
