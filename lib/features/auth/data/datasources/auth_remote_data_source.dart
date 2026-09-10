@@ -1,13 +1,16 @@
 import 'package:blog_app/core/error/exception.dart';
+
+import 'package:blog_app/features/auth/data/models/user_models.dart';
+
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 abstract interface class AuthRemoteDataSource {
-  Future<String> signUpwithEmailPassword({
+  Future<UserModel> signUpwithEmailPassword({
     required String name,
     required String email,
     required String password,
   });
-  Future<String> loginwithEmailPassword({
+  Future<UserModel> loginwithEmailPassword({
     required String email,
     required String password,
   });
@@ -18,16 +21,33 @@ class AuthRemoteDataSourceImp implements AuthRemoteDataSource {
   AuthRemoteDataSourceImp(this.supabaseClient);
 
   @override
-  Future<String> loginwithEmailPassword({
+  Future<UserModel> loginwithEmailPassword({
     required String email,
     required String password,
-  }) {
-    // TODO: implement loginwithEmailPassword
-    throw UnimplementedError();
+  }) async {
+    try {
+      final response = await supabaseClient.auth.signInWithPassword(
+        password: password,
+        email: email,
+      );
+      if (response.user == null) {
+        throw ServerException("user is null");
+      }
+      return UserModel.fromJson(response.user!.toJson());
+    } on AuthException catch (e) {
+      if (e.code == 'over_email_send_rate_limit') {
+        throw ServerException(
+          'Too many signup emails were requested. Please wait a few minutes and try again.',
+        );
+      }
+      throw ServerException(e.message);
+    } catch (e) {
+      throw ServerException(e.toString());
+    }
   }
 
   @override
-  Future<String> signUpwithEmailPassword({
+  Future<UserModel> signUpwithEmailPassword({
     required String name,
     required String email,
     required String password,
@@ -41,7 +61,14 @@ class AuthRemoteDataSourceImp implements AuthRemoteDataSource {
       if (response.user == null) {
         throw ServerException("user is null");
       }
-      return response.user!.id;
+      return UserModel.fromJson(response.user!.toJson());
+    } on AuthException catch (e) {
+      if (e.code == 'over_email_send_rate_limit') {
+        throw ServerException(
+          'Too many signup emails were requested. Please wait a few minutes and try again.',
+        );
+      }
+      throw ServerException(e.message);
     } catch (e) {
       throw ServerException(e.toString());
     }
