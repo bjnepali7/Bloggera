@@ -1,7 +1,9 @@
+import 'package:blog_app/core/common/cubits/app_user/app_user_cubit.dart';
 import 'package:blog_app/core/theme.dart';
 
 import 'package:blog_app/features/auth/presentation/bloc/auth_bloc.dart';
 import 'package:blog_app/features/auth/presentation/pages/login_page.dart';
+import 'package:blog_app/features/blog/presentation/pages/blog_page.dart';
 import 'package:blog_app/init_dependencies.dart';
 
 import 'package:flutter/material.dart';
@@ -13,21 +15,45 @@ void main() async {
 
   runApp(
     MultiBlocProvider(
-      providers: [BlocProvider(create: (_) => serviceLocator<AuthBloc>())],
+      providers: [
+        BlocProvider(create: (_) => serviceLocator<AuthBloc>()),
+        BlocProvider(create: (_) => serviceLocator<AppUserCubit>()),
+      ],
       child: const BlogApp(),
     ),
   );
 }
 
-class BlogApp extends StatelessWidget {
+class BlogApp extends StatefulWidget {
   const BlogApp({super.key});
+
+  @override
+  State<BlogApp> createState() => _BlogAppState();
+}
+
+class _BlogAppState extends State<BlogApp> {
+  @override
+  void initState() {
+    super.initState();
+    context.read<AuthBloc>().add(AuthIsUserLogin());
+  }
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       theme: AppTheme.darkModeTheme,
-      home: const LoginPage(),
+      home: BlocSelector<AppUserCubit, AppUserState, bool>(
+        selector: (state) {
+          return state is AppUserLogIn;
+        },
+        builder: (context, isLogin) {
+          if (isLogin) {
+            return const BlogPage();
+          }
+          return const LoginPage();
+        },
+      ),
     );
   }
 }
