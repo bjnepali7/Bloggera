@@ -43,6 +43,7 @@ class _BlogAppState extends State<BlogApp> {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       theme: AppTheme.darkModeTheme,
+
       home: BlocSelector<AppUserCubit, AppUserState, bool>(
         selector: (state) {
           return state is AppUserLogIn;
@@ -54,6 +55,17 @@ class _BlogAppState extends State<BlogApp> {
           return const LoginPage();
         },
       ),
+      // home: BlocSelector<AppUserCubit, AppUserState, bool>(
+      //   selector: (state) {
+      //     return state is AppUserLogIn;
+      //   },
+      //   builder: (context, isLogin) {
+      //     if (isLogin) {
+      //       return const BlogPage();
+      //     }
+      //     return const LoginPage();
+      //   },
+      // ),
     );
   }
 }
