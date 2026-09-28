@@ -6,7 +6,9 @@ Future<File?> pickImage() async {
   try {
     print("Opening ImagePicker...");
 
-    final xFile = await ImagePicker().pickImage(source: ImageSource.gallery);
+    final xFile = await ImagePicker().pickImage(source: ImageSource.gallery,
+    );
+  
 
     print("xFile = $xFile");
 
