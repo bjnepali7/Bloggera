@@ -40,6 +40,8 @@ class _SignupPageState extends State<SignupPage> {
           listener: (context, state) {
             if (state is AuthError) {
               showSnakBar(context, state.message);
+            } else if (state is AuthSuccess) {
+              Navigator.of(context).popUntil((route) => route.isFirst);
             }
           },
           builder: (context, state) {

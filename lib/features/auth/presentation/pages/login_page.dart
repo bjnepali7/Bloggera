@@ -37,6 +37,8 @@ class _LoginPageState extends State<LoginPage> {
           listener: (context, state) {
             if (state is AuthError) {
               showSnakBar(context, state.message);
+            } else if (state is AuthSuccess) {
+              Navigator.of(context).popUntil((route) => route.isFirst);
             }
           },
           builder: (context, state) {
@@ -82,14 +84,13 @@ class _LoginPageState extends State<LoginPage> {
                         label: "Sign In",
                         onPressed: () {
                           if (_formkey.currentState!.validate()) {
-                            
                             context.read<AuthBloc>().add(
                               AuthLogin(
                                 email: _emailController.text.trim(),
                                 password: _passwordController.text.trim(),
                               ),
                             );
-                             print("login done");
+                            print("login done");
                           }
                         },
                       ),
